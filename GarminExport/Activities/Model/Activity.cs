@@ -418,7 +418,7 @@ namespace GarminExport.Activities.Model
         public double? MaxAvgPower_18000 { get; set; }
 
         [DataMember(Name = "excludeFromPowerCurveReports")]
-        public double? ExcludeFromPowerCurveReports { get; set; }
+        public bool? ExcludeFromPowerCurveReports { get; set; }
 
         [DataMember(Name = "favorite")]
         public bool? Favorite { get; set; }
