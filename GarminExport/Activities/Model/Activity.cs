@@ -307,7 +307,7 @@ namespace GarminExport.Activities.Model
         public double? FloorsDescended { get; set; }
 
         [DataMember(Name = "manufacturer")]
-        public double? Manufacturer { get; set; }
+        public string Manufacturer { get; set; }
 
         [DataMember(Name = "diveNumber")]
         public double? DiveNumber { get; set; }
