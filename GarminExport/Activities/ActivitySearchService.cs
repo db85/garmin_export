@@ -32,6 +32,7 @@ namespace GarminExport.Activities
         {
             var uri = new Uri("https://connect.garmin.com/modern/proxy/activitylist-service/activities/search/activities?" + filters.ToQueryString());
             var request = new RestRequest(uri, Method.GET);
+            request.AddHeader("nk", "NT");
             var response = ConnectClient.Execute(request);
             return Activity.ParseActivityList(response.Content);
         }

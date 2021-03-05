@@ -8,10 +8,9 @@ namespace GarminExport.Auth
 {
     public class AuthService
     {
-        private static readonly string REFERER = "https://sso.garmin.com/sso/signin?service=https%3A%2F%2Fconnect.garmin.com%2Fmodern%2F&webhost=https%3A%2F%2Fconnect.garmin.com%2Fmodern%2F&source=https%3A%2F%2Fconnect.garmin.com%2Fsignin&redirectAfterAccountLoginUrl=https%3A%2F%2Fconnect.garmin.com%2Fmodern%2F&redirectAfterAccountCreationUrl=https%3A%2F%2Fconnect.garmin.com%2Fmodern%2F&gauthHost=https%3A%2F%2Fsso.garmin.com%2Fsso&locale=de_DE&id=gauth-widget&cssUrl=https%3A%2F%2Fstatic.garmincdn.com%2Fcom.garmin.connect%2Fui%2Fcss%2Fgauth-custom-v1.2-min.css&privacyStatementUrl=https%3A%2F%2Fwww.garmin.com%2Fde-DE%2Fprivacy%2Fconnect%2F&clientId=GarminConnect&rememberMeShown=true&rememberMeChecked=false&createAccountShown=true&openCreateAccount=false&displayNameShown=false&consumeServiceTicket=false&initialFocus=true&embedWidget=false&generateExtraServiceTicket=true&generateTwoExtraServiceTickets=false&generateNoServiceTicket=false&globalOptInShown=true&globalOptInChecked=false&mobile=false&connectLegalTerms=true&showTermsOfUse=false&showPrivacyPolicy=false&showConnectLegalAge=false&locationPromptShown=true&showPassword=true";
+        private static readonly string REFERER = "https://sso.garmin.com/sso/signin?service=https%3A%2F%2Fconnect.garmin.com%2Fmodern%2F&webhost=https%3A%2F%2Fconnect.garmin.com%2Fmodern%2F&source=https%3A%2F%2Fconnect.garmin.com%2Fsignin%2F&redirectAfterAccountLoginUrl=https%3A%2F%2Fconnect.garmin.com%2Fmodern%2F&redirectAfterAccountCreationUrl=https%3A%2F%2Fconnect.garmin.com%2Fmodern%2F&gauthHost=https%3A%2F%2Fsso.garmin.com%2Fsso&locale=en_US&id=gauth-widget&cssUrl=https%3A%2F%2Fconnect.garmin.com%2Fgauth-custom-v1.2-min.css&privacyStatementUrl=https%3A%2F%2Fwww.garmin.com%2Fen-US%2Fprivacy%2Fconnect%2F&clientId=GarminConnect&rememberMeShown=true&rememberMeChecked=false&createAccountShown=true&openCreateAccount=false&displayNameShown=false&consumeServiceTicket=false&initialFocus=true&embedWidget=false&generateExtraServiceTicket=true&generateTwoExtraServiceTickets=true&generateNoServiceTicket=false&globalOptInShown=true&globalOptInChecked=false&mobile=false&connectLegalTerms=true&showTermsOfUse=false&showPrivacyPolicy=false&showConnectLegalAge=false&locationPromptShown=true&showPassword=true&useCustomHeader=false&mfaRequired=false&rememberMyBrowserShown=false&rememberMyBrowserChecked=false";
         public Session Session { get; private set; }
         private RestClient SSOClient { get; set; }
-        private RestClient ConnectClient { get; set; }
         private string UserName { get; set; }
         private string Password { get; set; }
 
@@ -19,11 +18,6 @@ namespace GarminExport.Auth
         {
             Session = new Session();
             SSOClient = new RestClient("https://sso.garmin.com")
-            {
-                CookieContainer = Session.Cookies,
-                FollowRedirects = true
-            };
-            ConnectClient = new RestClient("http://connect.garmin.com/")
             {
                 CookieContainer = Session.Cookies,
                 FollowRedirects = true
@@ -37,7 +31,7 @@ namespace GarminExport.Auth
    
             try
             {
-                var signInResponse = PostLogin(null);
+                var signInResponse = PostLogin();
                 var ticketUrl = ParseServiceTicketUrl(signInResponse);
                 return ProcessTicket(ticketUrl);
             }
@@ -70,7 +64,7 @@ namespace GarminExport.Auth
         }
 
 
-        private string PostLogin(string flowExecutionKey)
+        private string PostLogin()
         {
             var request = BuildAuthRequest(Method.POST);
             NameValueCollection formData = new NameValueCollection
